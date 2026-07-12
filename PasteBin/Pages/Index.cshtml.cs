@@ -1,3 +1,6 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -15,14 +18,20 @@ namespace PasteBin.Pages
         public bool Error { get; set; } = false;
 
         /// <summary>
-        /// Render the page
+        /// If already authenticated, skip the login form and go straight to the pastes list
         /// </summary>
-        public void OnGet() { }
+        public IActionResult OnGet()
+        {
+            if (HttpContext.User.Identity?.IsAuthenticated ?? false)
+                return RedirectToPage("/Pastes/Index");
+
+            return Page();
+        }
 
         /// <summary>
-        /// Check password and redirect
+        /// Check password and, if correct, sign in with a persistent cookie and redirect
         /// </summary>
-        public IActionResult OnPost(string password)
+        public async Task<IActionResult> OnPost(string password)
         {
             if (password != configuration["Password"])
             {
@@ -30,7 +39,13 @@ namespace PasteBin.Pages
                 return Page();
             }
 
-            HttpContext.Session.SetString("authenticated", "true");
+            // Build a minimal identity - no roles or user-specific claims needed, just proof of a successful login
+            ClaimsIdentity identity = new ClaimsIdentity([new Claim(ClaimTypes.Name, "PasteBinUser")], CookieAuthenticationDefaults.AuthenticationScheme);
+            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+
+            // IsPersistent + the cookie's own ExpireTimeSpan (set in Program.cs) is what makes this survive browser restarts
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties { IsPersistent = true });
+
             return RedirectToPage("/Pastes/Index");
         }
     }

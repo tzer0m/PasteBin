@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace PasteBin.Services
 {
@@ -10,9 +11,9 @@ namespace PasteBin.Services
         /// <summary>
         /// Checks authentication before executing any page handler
         /// </summary>
-        public override void OnPageHandlerExecuting(Microsoft.AspNetCore.Mvc.Filters.PageHandlerExecutingContext context)
+        public override void OnPageHandlerExecuting(PageHandlerExecutingContext context)
         {
-            if (HttpContext.Session.GetString("authenticated") != "true")
+            if (!(HttpContext.User.Identity?.IsAuthenticated ?? false))
                 context.Result = RedirectToPage("/Index");
         }
     }
