@@ -3,7 +3,7 @@ using PasteBin.Data;
 using PasteBin.Models;
 using PasteBin.Services;
 
-namespace PasteBin.Pages.Pastes
+namespace PasteBin.Pages
 {
     /// <summary>
     /// View paste page

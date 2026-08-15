@@ -1,34 +1,31 @@
-﻿@page
+@page
+@using PasteBin.Models
 @model PasteBin.Pages.IndexModel
 @{
-    Layout = null;
+    ViewData["Title"] = "Pastes";
 }
 
-<!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PasteBin - Login</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-</head>
-<body class="bg-dark">
-    <div class="container d-flex justify-content-center align-items-center" style="min-height:100vh">
-        <div class="card p-4 shadow" style="width:100%;max-width:400px">
-            <h4 class="card-title mb-4">PasteBin</h4>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Pastes</h1>
+    <a asp-page="/New" class="btn btn-secondary">New Paste</a>
+</div>
 
-            @if (Model.Error)
-            {
-                <div class="alert alert-danger">Incorrect password</div>
-            }
-
-            <form method="post">
-                <div class="mb-3">
-                    <input type="password" name="password" class="form-control" placeholder="Password" autofocus />
+@if (!Model.Pastes.Any())
+{
+    <p class="text-muted">No pastes yet.</p>
+}
+else
+{
+    <div class="list-group">
+        @foreach (Paste paste in Model.Pastes)
+        {
+            <a asp-page="/View" asp-route-id="@paste.Id" class="list-group-item list-group-item-action">
+                <div class="d-flex justify-content-between">
+                    <span>Paste #@paste.Id</span>
+                    <small class="text-muted">@paste.CreatedAt.ToString("dd MMM yyyy HH:mm")</small>
                 </div>
-                <button type="submit" class="btn btn-secondary w-100">Login</button>
-            </form>
-        </div>
+                <small class="text-muted">@(paste.Content?[..Math.Min(100, paste.Content.Length)] ?? "No Content")...</small>
+            </a>
+        }
     </div>
-</body>
-</html>
+}

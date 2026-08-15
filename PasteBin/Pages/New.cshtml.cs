@@ -3,7 +3,7 @@ using PasteBin.Data;
 using PasteBin.Models;
 using PasteBin.Services;
 
-namespace PasteBin.Pages.Pastes
+namespace PasteBin.Pages
 {
     /// <summary>
     /// New paste page
@@ -38,7 +38,7 @@ namespace PasteBin.Pages.Pastes
             await context.SaveChangesAsync();
 
             // Go to view page
-            return RedirectToPage("/Pastes/View", new { id = paste.Id });
+            return RedirectToPage("/View", new { id = paste.Id });
         }
     }
 }
