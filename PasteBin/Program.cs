@@ -42,5 +42,10 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapGet("/health", async (AppDbContext context) =>
+{
+    bool canConnect = await context.Database.CanConnectAsync();
+    return canConnect ? Results.Ok(new { status = "ok", database = "ok" }) : Results.Json(new { status = "degraded", database = "unreachable" }, statusCode: StatusCodes.Status503ServiceUnavailable);
+});
 app.MapRazorPages();
 app.Run();
