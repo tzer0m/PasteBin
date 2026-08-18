@@ -1,7 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using PasteBin.Data;
 using PasteBin.Models;
-using PasteBin.Services;
 
 namespace PasteBin.Pages
 {
@@ -9,7 +10,8 @@ namespace PasteBin.Pages
     /// View paste page
     /// </summary>
     /// <param name="context">Database context</param>
-    public class ViewModel(AppDbContext context) : AuthPageModel
+    [Authorize]
+    public class ViewModel(AppDbContext context) : PageModel
     {
         /// <summary>
         /// Paste to display
