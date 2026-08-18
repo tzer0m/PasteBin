@@ -10,8 +10,7 @@ namespace PasteBin.Services
     public class AuthPageModel : PageModel
     {
         /// <summary>
-        /// Checks authentication before executing any page handler; unauthenticated requests
-        /// are sent straight into the OIDC sign-in flow rather than a local login page
+        /// Checks authentication before executing any page handler; unauthenticated requests are sent straight into the OIDC sign-in flow rather than a local login page
         /// </summary>
         public override void OnPageHandlerExecuting(PageHandlerExecutingContext context)
         {
